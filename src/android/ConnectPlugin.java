@@ -232,17 +232,22 @@ public class ConnectPlugin extends CordovaPlugin {
         appInviteDialog.registerCallback(callbackManager, new FacebookCallback<AppInviteDialog.Result>() {
             @Override
             public void onSuccess(AppInviteDialog.Result result) {
+				Log.d(TAG, "11");
                 if (showDialogContext != null) {
+					Log.d(TAG, "12");
                     try {
                         JSONObject json = new JSONObject();
+						Log.d(TAG, "13");
                         Bundle bundle = result.getData();
                         for (String key : bundle.keySet()) {
                             json.put(key, wrapObject(bundle.get(key)));
                         }
 
+						Log.d(TAG, "14");
                         showDialogContext.success(json);
                         showDialogContext = null;
                     } catch (JSONException e) {
+						Log.d(TAG, "fail2");
                         showDialogContext.success();
                         showDialogContext = null;
                     }
@@ -251,12 +256,14 @@ public class ConnectPlugin extends CordovaPlugin {
 
             @Override
             public void onCancel() {
+				Log.d(TAG, "15");
                 FacebookOperationCanceledException e = new FacebookOperationCanceledException();
                 handleError(e, showDialogContext);
             }
 
             @Override
             public void onError(FacebookException e) {
+				Log.d(TAG, "16");
                 Log.e("Activity", String.format("Error: %s", e.toString()));
                 handleError(e, showDialogContext);
             }
