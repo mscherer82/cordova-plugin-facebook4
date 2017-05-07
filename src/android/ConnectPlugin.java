@@ -91,6 +91,8 @@ public class ConnectPlugin extends CordovaPlugin {
         // Set up the activity result callback to this class
         cordova.setActivityResultCallback(this);
 
+		Log.d(TAG, "pluginInitialize");
+		
         LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(final LoginResult loginResult) {
@@ -140,6 +142,8 @@ public class ConnectPlugin extends CordovaPlugin {
                 }
             }
         });
+		
+		Log.d(TAG, "Create shareDialog");
 
         shareDialog = new ShareDialog(cordova.getActivity());
         shareDialog.registerCallback(callbackManager, new FacebookCallback<Sharer.Result>() {
@@ -163,6 +167,8 @@ public class ConnectPlugin extends CordovaPlugin {
                 handleError(e, showDialogContext);
             }
         });
+		
+		Log.d(TAG, "Create messageDialog");
 
         messageDialog = new MessageDialog(cordova.getActivity());
         messageDialog.registerCallback(callbackManager, new FacebookCallback<Sharer.Result>() {
@@ -186,6 +192,8 @@ public class ConnectPlugin extends CordovaPlugin {
                 handleError(e, showDialogContext);
             }
         });
+		
+		Log.d(TAG, "Create gameRequestDialog");
 
         gameRequestDialog = new GameRequestDialog(cordova.getActivity());
         gameRequestDialog.registerCallback(callbackManager, new FacebookCallback<GameRequestDialog.Result>() {
@@ -218,6 +226,8 @@ public class ConnectPlugin extends CordovaPlugin {
             }
         });
 
+		Log.d(TAG, "Create appInviteDialog");
+		
         appInviteDialog = new AppInviteDialog(cordova.getActivity());
         appInviteDialog.registerCallback(callbackManager, new FacebookCallback<AppInviteDialog.Result>() {
             @Override
@@ -346,6 +356,7 @@ public class ConnectPlugin extends CordovaPlugin {
     }
 
     private void executeAppInvite(JSONArray args, CallbackContext callbackContext) {
+		Log.d(TAG, "executeAppInvite");
         String url = null;
         String picture = null;
         JSONObject parameters;
@@ -356,6 +367,8 @@ public class ConnectPlugin extends CordovaPlugin {
             parameters = new JSONObject();
         }
 
+		Log.d(TAG, "1");
+		
         if (parameters.has("url")) {
             try {
                 url = parameters.getString("url");
@@ -368,6 +381,8 @@ public class ConnectPlugin extends CordovaPlugin {
             callbackContext.error("Missing required 'url' parameter");
             return;
         }
+		
+		Log.d(TAG, "2");
 
         if (parameters.has("picture")) {
             try {
@@ -378,22 +393,35 @@ public class ConnectPlugin extends CordovaPlugin {
                 return;
             }
         }
+		
+		Log.d(TAG, "3");
 
         if (AppInviteDialog.canShow()) {
+			
+			Log.d(TAG, "4");
+			
             AppInviteContent.Builder builder = new AppInviteContent.Builder();
             builder.setApplinkUrl(url);
             if (picture != null) {
                 builder.setPreviewImageUrl(picture);
+				Log.d(TAG, "4f");
             }
 
+			Log.d(TAG, "5");
+			
             showDialogContext = callbackContext;
             PluginResult pr = new PluginResult(PluginResult.Status.NO_RESULT);
+			Log.d(TAG, "6");
             pr.setKeepCallback(true);
+			Log.d(TAG, "7");
             showDialogContext.sendPluginResult(pr);
-
+			Log.d(TAG, "8");
             cordova.setActivityResultCallback(this);
+			Log.d(TAG, "9");
             appInviteDialog.show(builder.build());
+			Log.d(TAG, "10");
         } else {
+			Log.d(TAG, "fail");
             callbackContext.error("Unable to show dialog");
         }
     }
